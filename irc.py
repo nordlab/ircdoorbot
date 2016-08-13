@@ -43,7 +43,8 @@ class IRC:
 		"JOIN",
 		"NOTICE",
 		"QUIT",
-		"PONG"
+		"PONG",
+		"TOPIC"
 	]
 	"""Supported commands for sending."""
 
