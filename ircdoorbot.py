@@ -5,6 +5,7 @@ import json
 import time
 import threading
 import os
+import sys
 
 from irc import *
 from config import *
@@ -21,35 +22,39 @@ def doorstate():
 	return (spaceApi["state"]["open"], spaceApi["state"]["lastchange"])
 
 def checkdoor(irc, interval):
-	laststate, lastchanged = doorstate()
+	try:
+		laststate, lastchanged = doorstate()
 
-	while True:
-		state, changed = doorstate()
-		#print("Checking door state: {} (was {})".format(state, laststate))
+		while True:
+			state, changed = doorstate()
+			#print("Checking door state: {} (was {})".format(state, laststate))
 
-		if state != laststate:
-			print("Door status changed!")
-			os.environ['TZ'] = "{}".format(TIMEZONE)
-			time.tzset()
-			changetime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(lastchanged))
-			t = time.mktime(time.localtime()) - time.mktime(time.localtime(lastchanged))
-			changeduration = "{} Tagen {} Stunden, {} Minuten und {} Sekunden".format(
-				int(t // (24 * 3600)),
-				int(t // 3600),
-				int(t % 3600 // 60),
-				int(t % 60)
-			)
+			if state != laststate:
+				print("Door status changed!")
+				os.environ['TZ'] = "{}".format(TIMEZONE)
+				time.tzset()
+				changetime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(lastchanged))
+				t = time.mktime(time.localtime()) - time.mktime(time.localtime(lastchanged))
+				changeduration = "{} Tagen {} Stunden, {} Minuten und {} Sekunden".format(
+					int(t // (24 * 3600)),
+					int(t // 3600),
+					int(t % 3600 // 60),
+					int(t % 60)
+				)
 
-			if state:
-				irc("NOTICE", "{}".format(CHANNEL), ":{} ist offen (war seit dem {} für {} geschlossen)\r\n".format(SPACENAME, changetime, changeduration))
-				irc("TOPIC", "{}".format(CHANNEL), ":{} ist OFFEN seit {} || {}\r\n".format(SPACENAME, changetime, TOPIC))
-			else:
-				irc("NOTICE", "{}".format(CHANNEL), ":{} ist geschlossen (war seit dem {} für {} geöffnet)\r\n".format(SPACENAME, changetime, changeduration))
-				irc("TOPIC", "{}".format(CHANNEL), ":{} ist GESCHLOSSEN seit {} || {}\r\n".format(SPACENAME, changetime, TOPIC))
-			laststate = state
-			lastchanged = changed
+				if state:
+					irc("NOTICE", "{}".format(CHANNEL), ":{} ist offen (war seit dem {} für {} geschlossen)\r\n".format(SPACENAME, changetime, changeduration))
+					irc("TOPIC", "{}".format(CHANNEL), ":{} ist OFFEN seit {} || {}\r\n".format(SPACENAME, changetime, TOPIC))
+				else:
+					irc("NOTICE", "{}".format(CHANNEL), ":{} ist geschlossen (war seit dem {} für {} geöffnet)\r\n".format(SPACENAME, changetime, changeduration))
+					irc("TOPIC", "{}".format(CHANNEL), ":{} ist GESCHLOSSEN seit {} || {}\r\n".format(SPACENAME, changetime, TOPIC))
+				laststate = state
+				lastchanged = changed
 
-		time.sleep(interval)
+			time.sleep(interval)
+	except:
+		excType, excValue, excTraceback = sys.exc_info()
+		print(excValue, file=sys.stderr)
 
 def loggedin(irc, *args):
 	ircc("JOIN", "#hackerspace")
