@@ -176,7 +176,8 @@ class IRC:
 			# and append it to buffer.
 			# It gets appended because there might be incomplete data
 			# from a previous read.
-			self.buf = self.buf + self.s.recv(1024).decode("utf-8")
+			# Try to decode as UTF-8, replace unknown characters on error
+			self.buf = self.buf + self.s.recv(1024).decode("utf-8", "replace")
 
 		lines = self.buf.split("\r\n", 1)
 		line = lines[0]
