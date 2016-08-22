@@ -53,7 +53,8 @@ class IRC:
 
 	callbacks = {
 		"loggedin": None,
-		"joined": None
+		"joined": None,
+                "messaged": None
 	}
 
 	def __call__(self, *args):
@@ -205,7 +206,9 @@ class IRC:
 			self.callbacks["loggedin"](self, *line)
 		elif len(line) > 1 and line[1] == "JOIN":
 			self.callbacks["joined"](self, *line)
-	
+		elif len(line) > 1 and line[1] == "PRIVMSG":
+			self.callbacks["messaged"](self, *line)
+
 	def registerCallback(self, event, callback):
 		self.callbacks[event] = callback
 
