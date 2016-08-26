@@ -48,7 +48,7 @@ def checkdoor(irc, interval):
 		time.sleep(interval)
 
 def loggedin(irc, *args):
-	ircc("JOIN", "#hackerspace")
+	irc("JOIN", "#hackerspace")
 
 def joined(irc, *args):
 	doorchecker = threading.Thread(target=checkdoor, args=(irc, CHECKINTERVAL))
