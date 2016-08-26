@@ -1,7 +1,11 @@
 HOST = "irc.lugfl.de"
 PORT = 6667
-NICK = "bot"
-USER = "bot"
+NICK = "doorbot"
+USER = "doorbot"
 REALNAME = "Test bot"
 CHANNEL = "#hackerspace"
+TOPIC = "Jeden Montag freier Hackerspace ab 18 Uhr im Offenen Kanal in Flensburg!"
+SPACENAME = "nordlab"
+SPACEAPIURI = "http://spaceapi.nordlab-ev.de/"
+TIMEZONE = "Europe/Berlin"
 CHECKINTERVAL = 10

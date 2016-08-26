@@ -43,7 +43,8 @@ class IRC:
 		"JOIN",
 		"NOTICE",
 		"QUIT",
-		"PONG"
+		"PONG",
+		"TOPIC"
 	]
 	"""Supported commands for sending."""
 
@@ -52,7 +53,8 @@ class IRC:
 
 	callbacks = {
 		"loggedin": None,
-		"joined": None
+		"joined": None,
+                "messaged": None
 	}
 
 	def __call__(self, *args):
@@ -175,7 +177,8 @@ class IRC:
 			# and append it to buffer.
 			# It gets appended because there might be incomplete data
 			# from a previous read.
-			self.buf = self.buf + self.s.recv(1024).decode("utf-8")
+			# Try to decode as UTF-8, replace unknown characters on error
+			self.buf = self.buf + self.s.recv(1024).decode("utf-8", "replace")
 
 		lines = self.buf.split("\r\n", 1)
 		line = lines[0]
@@ -203,7 +206,9 @@ class IRC:
 			self.callbacks["loggedin"](self, *line)
 		elif len(line) > 1 and line[1] == "JOIN":
 			self.callbacks["joined"](self, *line)
-	
+		elif len(line) > 1 and line[1] == "PRIVMSG":
+			self.callbacks["messaged"](self, *line)
+
 	def registerCallback(self, event, callback):
 		self.callbacks[event] = callback
 
