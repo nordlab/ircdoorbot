@@ -66,7 +66,7 @@ def checkerthread(irc, interval):
 		print(excValue, file=sys.stderr)
 
 def loggedin(irc, *args):
-	irc("JOIN", "#hackerspace")
+	irc("JOIN", CHANNEL)
 
 def joined(irc, *args):
 	doorchecker = threading.Thread(target=checkerthread, args=(irc, CHECKINTERVAL))
