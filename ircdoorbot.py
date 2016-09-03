@@ -90,8 +90,8 @@ if __name__ == "__main__":
 	try:
 		ircc = IRC()
 		ircc.connect(HOST, PORT)
-		ircc("NICK", NICK)
 		ircc("USER", USER, HOST, "*", ":{}".format(REALNAME))
+		ircc("NICK", NICK)
 
 		ircc.registerCallback("loggedin", loggedin)
 		ircc.registerCallback("joined", joined)
