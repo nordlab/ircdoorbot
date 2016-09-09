@@ -10,6 +10,8 @@ import sys
 from irc import *
 from config import *
 
+THREAD_RUNNING = False
+
 def doorstate():
 	spaceApiUri = "{}".format(SPACEAPIURI)
 	result = None
@@ -65,13 +67,17 @@ def checkerthread(irc, interval):
 
 		print(excValue, file=sys.stderr)
 
+	THREAD_RUNNING = False
+
 def loggedin(irc, *args):
 	irc("JOIN", CHANNEL)
 
 def joined(irc, *args):
-	doorchecker = threading.Thread(target=checkerthread, args=(irc, CHECKINTERVAL))
-	doorchecker.daemon = True
-	doorchecker.start()
+	if not THREAD_RUNNING:
+		doorchecker = threading.Thread(target=checkerthread, args=(irc, CHECKINTERVAL))
+		doorchecker.daemon = True
+		doorchecker.start()
+		THREAD_RUNNING = True
 
 def messaged(irc, *args):
 	if len(args) >= 4:
