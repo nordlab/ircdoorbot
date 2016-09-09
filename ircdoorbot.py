@@ -44,6 +44,8 @@ def ircmessage(irc, state, changed):
 				irc("TOPIC", "{}".format(CHANNEL), ":{} ist GESCHLOSSEN seit {} || {}\r\n".format(SPACENAME, changetime, TOPIC))
 
 def checkerthread(irc, interval):
+	global THREAD_RUNNING
+
 	try:
 		laststate, _ = doorstate()
 
@@ -73,6 +75,8 @@ def loggedin(irc, *args):
 	irc("JOIN", CHANNEL)
 
 def joined(irc, *args):
+	global THREAD_RUNNING
+
 	if not THREAD_RUNNING:
 		doorchecker = threading.Thread(target=checkerthread, args=(irc, CHECKINTERVAL))
 		doorchecker.daemon = True
