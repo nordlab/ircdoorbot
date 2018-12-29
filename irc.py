@@ -3,6 +3,7 @@
 import socket
 import sys
 import queue
+import ssl
 import select
 
 """
@@ -85,10 +86,12 @@ class IRC:
 
 		The method does not return something.
 		"""
-
-		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+		print(host)
+		print(port)
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+		self.s = ssl.wrap_socket(sock)
 		self.s.connect((host, port))
+
 
 	def disconnect(self):
 		"""
@@ -179,6 +182,8 @@ class IRC:
 			# from a previous read.
 			# Try to decode as UTF-8, replace unknown characters on error
 			self.buf = self.buf + self.s.recv(1024).decode("utf-8", "replace")
+			if not self.buf:
+				sys.exit(1)
 
 		lines = self.buf.split("\r\n", 1)
 		line = lines[0]

@@ -37,11 +37,11 @@ def ircmessage(irc, state, changed):
 			)
 
 			if state:
-				irc("NOTICE", "{}".format(CHANNEL), ":{} ist offen (war seit dem {} für {} geschlossen)\r\n".format(SPACENAME, changetime, changeduration))
-				irc("TOPIC", "{}".format(CHANNEL), ":{} ist OFFEN seit {} || {}\r\n".format(SPACENAME, changetime, TOPIC))
+				irc("NOTICE", "{}".format(CHANNEL), ":{} ist offen (ist seit dem {} für {} geöffnet)\r\n".format(SPACENAME, changetime, changeduration))
+				#irc("TOPIC", "{}".format(CHANNEL), ":{} ist OFFEN seit {} || {}\r\n".format(SPACENAME, changetime, TOPIC))
 			else:
-				irc("NOTICE", "{}".format(CHANNEL), ":{} ist geschlossen (war seit dem {} für {} geöffnet)\r\n".format(SPACENAME, changetime, changeduration))
-				irc("TOPIC", "{}".format(CHANNEL), ":{} ist GESCHLOSSEN seit {} || {}\r\n".format(SPACENAME, changetime, TOPIC))
+				irc("NOTICE", "{}".format(CHANNEL), ":{} ist geschlossen (ist seit dem {} für {} geschlossen)\r\n".format(SPACENAME, changetime, changeduration))
+				#irc("TOPIC", "{}".format(CHANNEL), ":{} ist GESCHLOSSEN seit {}\r\n".format(SPACENAME, changetime))
 
 def checkerthread(irc, interval):
 	global THREAD_RUNNING
@@ -53,7 +53,6 @@ def checkerthread(irc, interval):
 			try:
 				state, changed = doorstate()
 				#print("Checking door state: {} (was {})".format(state, laststate))
-
 				if state != laststate:
 					ircmessage(irc, state, changed)
 
