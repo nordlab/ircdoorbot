@@ -1,0 +1,11 @@
+HOST = "irc.hackint.org"
+PORT = 9999
+NICK = "doorbot"
+USER = "doorbot"
+REALNAME = "doorbot"
+CHANNEL = "#nordlab"
+TOPIC = "This is a test topic"
+SPACENAME = "hackerspace"
+SPACEAPIURI = "http://nordlab-ev.de/spaceapi.php"
+TIMEZONE = "Europe/Berlin"
+CHECKINTERVAL = 10
